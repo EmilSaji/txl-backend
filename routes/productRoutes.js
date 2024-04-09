@@ -32,12 +32,12 @@ module.exports = () => {
   router.post("/create-product", async (req, res) => {
     try {
       const connection = req.app.locals.connection;
-      const { name, price } = req.body;
+      const { name, category, price, quantity } = req.body;
       const [result] = await connection.execute(
-        "INSERT INTO products (name, price) VALUES (?, ?)",
-        [name, price]
+        "INSERT INTO products (name, category, price, quantity) VALUES (?, ?, ?, ?)",
+        [name, category, price, quantity]
       );
-      res.json({ id: result.insertId, name, price });
+      res.json({ id: result.insertId, name, price, quantity });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -70,5 +70,19 @@ module.exports = () => {
       res.status(500).json({ message: error.message });
     }
   });
+
+  //fetch total value of the products
+  router.get("/product-totals", async (req, res) => {
+    try {
+      const connection = req.app.locals.connection;
+      const [rows, fields] = await connection.execute(
+        "SELECT category, SUM(price * quantity) AS total_value FROM products GROUP BY category"
+      );
+      res.json(rows);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   return router;
 };
