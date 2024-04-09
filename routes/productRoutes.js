@@ -52,7 +52,7 @@ module.exports = () => {
         "UPDATE products SET name = ?, category = ?, price = ?, quantity = ? WHERE id = ?",
         [name, category, price, quantity, req.params.id]
       );
-      res.json({ id: req.params.id, name, price });
+      res.json({ id: req.params.id, name, category, price, quantity });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
