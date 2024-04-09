@@ -47,10 +47,10 @@ module.exports = () => {
   router.put("/update-products/:id", async (req, res) => {
     try {
       const connection = req.app.locals.connection;
-      const { name, price } = req.body;
+      const { name, category, price, quantity } = req.body;
       await connection.execute(
-        "UPDATE products SET name = ?, price = ? WHERE id = ?",
-        [name, price, req.params.id]
+        "UPDATE products SET name = ?, category = ?, price = ?, quantity = ? WHERE id = ?",
+        [name, category, price, quantity, req.params.id]
       );
       res.json({ id: req.params.id, name, price });
     } catch (error) {
